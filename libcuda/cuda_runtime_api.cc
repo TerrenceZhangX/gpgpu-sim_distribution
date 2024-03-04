@@ -3595,7 +3595,7 @@ unsigned CUDARTAPI __cudaPushCallConfiguration(dim3 gridDim, dim3 blockDim,
   if (g_debug_execution >= 3) {
     announce_call(__my_func__);
   }
-  cudaConfigureCallInternal(gridDim, blockDim, sharedMem, stream);
+  return cudaConfigureCallInternal(gridDim, blockDim, sharedMem, stream);
 }
 
 cudaError_t CUDARTAPI __cudaPopCallConfiguration(dim3 *gridDim, dim3 *blockDim,
