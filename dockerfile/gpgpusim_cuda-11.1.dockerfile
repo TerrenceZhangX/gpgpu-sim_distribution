@@ -1,7 +1,5 @@
 # CUDA 11.8
-# FROM nvidia/cuda:11.8.0-devel-ubuntu20.04
-# FROM nvcr.io/nvidia/pytorch:20.12-py3
-FROM nvcr.io/nvidia/pytorch:19.08-py3
+FROM nvcr.io/nvidia/pytorch:20.03-py3
 
 
 # Enable shell for source command
