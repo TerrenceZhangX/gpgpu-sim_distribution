@@ -1,5 +1,5 @@
 # CUDA 10.1
-FROM nvcr.io/nvidia/pytorch:20.03-py3
+FROM nvcr.io/nvidia/pytorch:19.08-py3
 
 
 # Enable shell for source command
