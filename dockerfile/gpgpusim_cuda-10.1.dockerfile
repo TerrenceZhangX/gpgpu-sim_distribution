@@ -1,4 +1,4 @@
-# CUDA 11.8
+# CUDA 10.1
 FROM nvcr.io/nvidia/pytorch:20.03-py3
 
 
