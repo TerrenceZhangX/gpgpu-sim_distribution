@@ -1,7 +1,8 @@
-# CUDA 10.1
+# CUDA 11.8
 # https://docs.nvidia.com/deeplearning/frameworks/pytorch-release-notes/rel-24-02.html
-FROM nvcr.io/nvidia/pytorch:19.08-py3
+FROM nvcr.io/nvidia/pytorch:22.12-py3
 # CUDA 10.2 + pytorch has the bug that pytorch code is running on GPU, instead of simulator. Need further debug to figure out.
+# Pytorch 1.4+ calls unimplemented CUDA Runtime API. Needs hack.
 
 # Enable shell for source command
 SHELL ["/bin/bash", "-c"] 
@@ -40,6 +41,6 @@ RUN cd /workspace && \
     git checkout zhangt_dev && \
     source setup_environment && \
     make -j32
-ENV LD_LIBRARY_PATH=/workspace/gpgpu-sim_distribution/lib/gcc-7.4.0/cuda-10010/release:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/workspace/gpgpu-sim_distribution/lib/gcc-9.4.0/cuda-11080/release:$LD_LIBRARY_PATH
 ## Link Pytorch binary to GPGPU-Sim
-ENV PYTORCH_BIN=/opt/conda/lib/python3.6/site-packages/torch/lib/libcaffe2_detectron_ops_gpu.so
+ENV PYTORCH_BIN=/usr/local/lib/python3.8/dist-packages/torch/lib/libtorch_cuda.so

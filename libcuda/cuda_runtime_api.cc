@@ -2620,6 +2620,236 @@ __host__ cudaError_t CUDARTAPI cudaStreamGetPriority(cudaStream_t hStream,
   return g_last_cudaError = cudaSuccess;
 }
 
+__host__ cudaError_t cudaStreamIsCapturing ( cudaStream_t stream, 
+                                            cudaStreamCaptureStatus ** pCaptureStatus ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;
+}
+
+__host__ cudaError_t cudaFreeAsync ( void* devPtr, cudaStream_t hStream ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;
+}
+
+__host__ cudaError_t cudaStreamGetCaptureInfo ( cudaStream_t stream,
+                                                cudaStreamCaptureStatus ** captureStatus_out, 
+                                                unsigned long long* id_out = 0, 
+                                                cudaGraph_t* graph_out = 0, 
+                                                const cudaGraphNode_t** dependencies_out = 0, 
+                                                size_t* numDependencies_out = 0 ) {
+
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;                                                  
+}
+
+__host__ cudaError_t cudaIpcCloseMemHandle ( void* devPtr ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;
+}
+
+__host__ cudaError_t cudaMemPoolTrimTo ( cudaMemPool_t memPool, size_t minBytesToKeep ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;
+}
+
+__host__ cudaError_t cudaMemPoolGetAttribute ( cudaMemPool_t memPool, cudaMemPoolAttr attr, 
+                                               void* value ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;
+}
+
+__host__ cudaError_t cudaDeviceGetDefaultMemPool ( cudaMemPool_t* memPool, int  device ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;
+}
+
+__host__ cudaError_t cudaMallocAsync ( void** ptr, size_t size, cudaMemPool_t memPool, cudaStream_t stream ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;
+}
+
+__host__ cudaError_t cudaMemPoolSetAttribute ( cudaMemPool_t memPool, cudaMemPoolAttr attr, void* value ) {
+   if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess; 
+}
+
+__host__ cudaError_t cudaThreadExchangeStreamCaptureMode ( cudaStreamCaptureMode ** mode ) {
+   if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess; 
+}
+
+__host__ cudaError_t cudaGraphInstantiate ( cudaGraphExec_t* pGraphExec, cudaGraph_t graph, unsigned long long flags = 0 ) {
+   if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;   
+}
+
+__host__ cudaError_t cudaGraphExecDestroy ( cudaGraphExec_t graphExec ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;   
+}
+
+__host__ cudaError_t cudaStreamBeginCapture ( cudaStream_t stream, cudaStreamCaptureMode mode ) {
+   if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;    
+}
+
+__host__ __device__ cudaError_t cudaGraphLaunch ( cudaGraphExec_t graphExec, cudaStream_t stream ) {
+   if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;    
+}
+
+__host__ cudaError_t cudaIpcOpenEventHandle ( cudaEvent_t* event, cudaIpcEventHandle_t handle ) {
+   if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;    
+}
+
+__host__ cudaError_t cudaIpcGetEventHandle ( cudaIpcEventHandle_t* handle, cudaEvent_t event ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;  
+}
+
+__host__ cudaError_t cudaMemPoolSetAccess ( cudaMemPool_t memPool, const cudaMemAccessDesc* descList, size_t count ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess; 
+}
+
+__host__ cudaError_t cudaGraphInstantiateWithFlags ( cudaGraphExec_t* pGraphExec, cudaGraph_t graph, unsigned long long flags = 0 ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;   
+}
+
+__host__ cudaError_t cudaStreamEndCapture ( cudaStream_t stream, cudaGraph_t* pGraph ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;  
+}
+
+typedef struct cudaStreamCallback_t {
+  cudaStream_t stream;
+  cudaError_t status;
+  void*  userData;
+} cudaStreamCallback_t;
+
+__host__ cudaError_t cudaStreamAddCallback ( cudaStream_t stream, cudaStreamCallback_t callback, void* userData, unsigned int  flags ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;    
+}
+
+__host__ cudaError_t cudaMemcpyPeerAsync ( void* dst, int  dstDevice, const void* src, int  srcDevice, size_t count, cudaStream_t stream = 0 ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;  
+}
+
+__host__ cudaError_t cudaGraphDestroy ( cudaGraph_t graph ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;  
+}
+
+__host__ cudaError_t cudaProfilerInitialize ( const char* configFile, const char* outputFile, cudaOutputMode_t outputMode ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;  
+}
+
+__host__ cudaError_t cudaProfilerStart ( void ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;  
+}
+
+__host__ cudaError_t cudaProfilerStop ( void ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;  
+}
+
+__host__ cudaError_t cudaHostUnregister ( void* ptr ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;  
+}
+
+__host__ cudaError_t cudaHostRegister ( void* ptr, size_t size, unsigned int  flags ) {
+  if (g_debug_execution >= 3) {
+    announce_call(__my_func__);
+  }
+  printf("WARNING: this function has not been implemented yet.");
+  return cudaSuccess;  
+}
+
 __host__ cudaError_t CUDARTAPI cudaDeviceGetPCIBusId(char *pciBusId, int len,
                                                      int device) {
   if (g_debug_execution >= 3) {
@@ -4718,30 +4948,30 @@ CUresult CUDAAPI cuMemHostRegister(void *p, size_t bytesize,
   printf("WARNING: this function has not been implemented yet.");
   return CUDA_SUCCESS;
 }
-__host__ cudaError_t cudaHostRegister(void *ptr, size_t size,
-                                      unsigned int flags) {
-  if (g_debug_execution >= 3) {
-    announce_call(__my_func__);
-  }
-  printf("WARNING: this function has not been implemented yet.");
-  return g_last_cudaError = cudaSuccess;
-}
+// __host__ cudaError_t cudaHostRegister(void *ptr, size_t size,
+//                                       unsigned int flags) {
+//   if (g_debug_execution >= 3) {
+//     announce_call(__my_func__);
+//   }
+//   printf("WARNING: this function has not been implemented yet.");
+//   return g_last_cudaError = cudaSuccess;
+// }
 
-__host__ cudaError_t cudaProfilerStart() {
-  if (g_debug_execution >= 3) {
-    announce_call(__my_func__);
-  }
-  printf("WARNING: this function has not been implemented yet.");
-  return g_last_cudaError = cudaSuccess;
-}
+// __host__ cudaError_t cudaProfilerStart() {
+//   if (g_debug_execution >= 3) {
+//     announce_call(__my_func__);
+//   }
+//   printf("WARNING: this function has not been implemented yet.");
+//   return g_last_cudaError = cudaSuccess;
+// }
 
-__host__ cudaError_t cudaProfilerStop() {
-  if (g_debug_execution >= 3) {
-    announce_call(__my_func__);
-  }
-  printf("WARNING: this function has not been implemented yet.");
-  return g_last_cudaError = cudaSuccess;
-}
+// __host__ cudaError_t cudaProfilerStop() {
+//   if (g_debug_execution >= 3) {
+//     announce_call(__my_func__);
+//   }
+//   printf("WARNING: this function has not been implemented yet.");
+//   return g_last_cudaError = cudaSuccess;
+// }
 
 #endif
 #if CUDART_VERSION >= 4000
