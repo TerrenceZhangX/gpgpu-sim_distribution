@@ -125,7 +125,10 @@ void Scoreboard::releaseRegisters(const class warp_inst_t* inst) {
  * @return
  * true if WAW or RAW hazard (no WAR since in-order issue)
  **/
+
 bool Scoreboard::checkCollision(unsigned wid, const class inst_t* inst) const {
+  bool debug_this_core = false;
+  if (m_sid == g_cluster_sim) debug_this_core = true;
   // Get list of all input and output registers
   std::set<int> inst_regs;
 
@@ -144,6 +147,14 @@ bool Scoreboard::checkCollision(unsigned wid, const class inst_t* inst) const {
   std::set<int>::const_iterator it2;
   for (it2 = inst_regs.begin(); it2 != inst_regs.end(); it2++)
     if (reg_table[wid].find(*it2) != reg_table[wid].end()) {
+      if (debug_this_core) {
+        printf("DEBUG: SM %d Warp %u - Reg Conflict at PC %x - Register R%u is busy. Current busy registers: ",
+               m_sid, wid, inst->pc, (*it2-1));
+        for (unsigned val : reg_table[wid]) {
+          printf("R%u ", (val-1));
+        }
+        printf("\n");
+      }
       return true;
     }
   return false;

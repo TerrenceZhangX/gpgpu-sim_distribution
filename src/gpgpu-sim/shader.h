@@ -73,6 +73,8 @@
 
 #define WRITE_MASK_SIZE 8
 
+extern unsigned g_cluster_sim;
+
 class gpgpu_context;
 
 enum exec_unit_type_t {
@@ -2656,6 +2658,10 @@ class simt_core_cluster {
   float get_current_occupancy(unsigned long long &active,
                               unsigned long long &total) const;
   virtual void create_shader_core_ctx() = 0;
+
+  void set_debug_options(bool debug_mode, unsigned cluster_sim);
+  
+  bool should_debug() const;
 
  protected:
   unsigned m_cluster_id;

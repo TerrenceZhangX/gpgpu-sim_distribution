@@ -2061,8 +2061,13 @@ void gpgpu_sim::cycle() {
   if (clock_mask & CORE) {
     // L1 cache + shader core pipeline stages
     m_power_stats->pwr_mem_stat->core_cache_stats[CURRENT_STAT_IDX].clear();
+    m_cluster[0]->set_debug_options(true, 0);
+
     for (unsigned i = 0; i < m_shader_config->n_simt_clusters; i++) {
       if (m_cluster[i]->get_not_completed() || get_more_cta_left()) {
+        if (m_cluster[i]->should_debug()) {
+          printf("DEBUG: Cycle %lld\n", gpu_sim_cycle);
+        }
         m_cluster[i]->core_cycle();
         *active_sms += m_cluster[i]->get_n_active_sms();
       }

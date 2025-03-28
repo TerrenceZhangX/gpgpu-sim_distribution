@@ -54,6 +54,8 @@
 #define PRIORITIZE_MSHR_OVER_WB 1
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
+bool g_debug_mode = false;
+unsigned g_cluster_sim = 0;
 
 mem_fetch *shader_core_mem_fetch_allocator::alloc(
     new_addr_type addr, mem_access_type type, unsigned size, bool wr,
@@ -1258,6 +1260,12 @@ void scheduler_unit::order_by_priority(
 
 void scheduler_unit::cycle() {
   SCHED_DPRINTF("scheduler_unit::cycle()\n");
+  bool debug_this_core = false;
+  if (m_shader->m_sid == g_cluster_sim) {
+    debug_this_core = true;
+  }
+
+
   bool valid_inst =
       false;  // there was one warp with a valid instruction to issue (didn't
               // require flush due to control hazard)
@@ -1506,6 +1514,11 @@ void scheduler_unit::cycle() {
               }
 
             }  // end of else
+            
+            if (warp_inst_issued && debug_this_core) {
+              printf("DEBUG: SM %d Warp %u - No Stall at PC %x - Op %u issued\n", 
+                m_shader->m_sid, warp_id, pc, pI->op);
+            }
           } else {
             SCHED_DPRINTF(
                 "Warp (warp_id %u, dynamic_warp_id %u) fails scoreboard\n",
@@ -1518,6 +1531,11 @@ void scheduler_unit::cycle() {
             "Warp (warp_id %u, dynamic_warp_id %u) return from diverged warp "
             "flush\n",
             (*iter)->get_warp_id(), (*iter)->get_dynamic_warp_id());
+
+        if (debug_this_core) {
+          printf("Fail to issue instruction %u @ PC %x on warp %u. Reason: Invalid \n",pI->op,pI->pc,warp_id);
+        }
+          
         warp(warp_id).set_next_pc(pc);
         warp(warp_id).ibuffer_flush();
       }
@@ -1526,6 +1544,11 @@ void scheduler_unit::cycle() {
             "Warp (warp_id %u, dynamic_warp_id %u) issued %u instructions\n",
             (*iter)->get_warp_id(), (*iter)->get_dynamic_warp_id(), issued);
         do_on_warp_issued(warp_id, issued, iter);
+
+      }
+      else if (ready_inst && debug_this_core) {
+        printf("DEBUG: SM %d Warp %u - Function Unit unavailable at PC %x - Op %u cannot be issued\n", 
+          m_shader->m_sid, warp_id, pI->pc, pI->op);
       }
       checked++;
     }
@@ -1536,6 +1559,7 @@ void scheduler_unit::cycle() {
       // supervised_is index with each entry in the
       // m_next_cycle_prioritized_warps vector. For now, just run through until
       // you find the right warp_id
+
       for (std::vector<shd_warp_t *>::const_iterator supervised_iter =
                m_supervised_warps.begin();
            supervised_iter != m_supervised_warps.end(); ++supervised_iter) {
@@ -4464,6 +4488,8 @@ simt_core_cluster::simt_core_cluster(class gpgpu_sim *gpu, unsigned cluster_id,
                                      const memory_config *mem_config,
                                      shader_core_stats *stats,
                                      class memory_stats_t *mstats) {
+
+
   m_config = config;
   m_cta_issue_next_core = m_config->n_simt_cores_per_cluster -
                           1;  // this causes first launch to use hw cta 0
@@ -4472,6 +4498,15 @@ simt_core_cluster::simt_core_cluster(class gpgpu_sim *gpu, unsigned cluster_id,
   m_stats = stats;
   m_memory_stats = mstats;
   m_mem_config = mem_config;
+}
+
+void simt_core_cluster::set_debug_options(bool debug_mode, unsigned cluster_sim) {
+  g_debug_mode = debug_mode;
+  g_cluster_sim = cluster_sim;
+}
+
+bool simt_core_cluster::should_debug() const {
+  return (g_debug_mode && (g_cluster_sim == m_cluster_id));
 }
 
 void simt_core_cluster::core_cycle() {
