@@ -148,8 +148,8 @@ bool Scoreboard::checkCollision(unsigned wid, const class inst_t* inst) const {
   for (it2 = inst_regs.begin(); it2 != inst_regs.end(); it2++)
     if (reg_table[wid].find(*it2) != reg_table[wid].end()) {
       if (debug_this_core) {
-        printf("DEBUG: SM %d Warp %u - Reg Conflict at PC %x - Register R%u is busy. Current busy registers: ",
-               m_sid, wid, inst->pc, (*it2-1));
+        printf("DEBUG: SM %d Warp %u - Reg Conflict at PC %x - OP %u - Register R%u is busy. Current busy registers: ",
+               m_sid, wid, inst->pc, inst->op, (*it2-1));
         for (unsigned val : reg_table[wid]) {
           printf("R%u ", (val-1));
         }

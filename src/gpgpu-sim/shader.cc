@@ -1514,10 +1514,25 @@ void scheduler_unit::cycle() {
               }
 
             }  // end of else
-            
+
             if (warp_inst_issued && debug_this_core) {
-              printf("DEBUG: SM %d Warp %u - No Stall at PC %x - Op %u issued\n", 
-                m_shader->m_sid, warp_id, pc, pI->op);
+              printf(
+                  "DEBUG: SM %d Warp %u - No Stall at PC %x - Op %u issued. "
+                  "Reg Occupy:",
+                  m_shader->m_sid, warp_id, pc, pI->op);
+
+              std::string reg_str;
+              reg_str += "[Out]: ";
+
+              for (unsigned iii = 0; iii < pI->outcount; iii++) {
+                reg_str += "R" + std::to_string(pI->out[iii]-1) + " ";
+              }
+              reg_str += "[In]: ";
+              for (unsigned jjj = 0; jjj < pI->incount; jjj++) {
+                reg_str += "R" + std::to_string(pI->in[jjj]-1) + " ";
+              }
+
+              printf(" %s\n", reg_str.c_str());
             }
           } else {
             SCHED_DPRINTF(
