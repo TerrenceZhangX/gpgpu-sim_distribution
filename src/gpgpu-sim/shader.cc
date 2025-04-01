@@ -1348,6 +1348,8 @@ void scheduler_unit::cycle() {
                 m_shader->get_active_mask(warp_id, pI);
 
             assert(warp(warp_id).inst_in_pipeline());
+            int previous_issued_inst_op = 0;
+            previous_issued_inst_op = pI->op;
 
             if ((pI->op == LOAD_OP) || (pI->op == STORE_OP) ||
                 (pI->op == MEMORY_BARRIER_OP) ||
@@ -1519,7 +1521,7 @@ void scheduler_unit::cycle() {
               printf(
                   "DEBUG: SM %d Warp %u - No Stall at PC %x - Op %u issued. "
                   "Reg Occupy:",
-                  m_shader->m_sid, warp_id, pc, pI->op);
+                  m_shader->m_sid, warp_id, pc, previous_issued_inst_op);
 
               std::string reg_str;
               reg_str += "[Out]: ";
