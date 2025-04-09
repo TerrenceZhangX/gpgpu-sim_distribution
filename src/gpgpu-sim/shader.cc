@@ -1753,6 +1753,11 @@ void swl_scheduler::order_warps() {
 void shader_core_ctx::read_operands() {
   for (unsigned int i = 0; i < m_config->reg_file_port_throughput; ++i)
     m_operand_collector.step();
+
+  // Dump operand collector status to understand operand read/assign status in cycle level
+  // if (m_operand_collector.shader_core()->get_sid() == g_cluster_sim) {
+  //   m_operand_collector.dump(stdout);
+  // }
 }
 
 address_type coalesced_segment(address_type addr,
@@ -1869,10 +1874,30 @@ void shader_core_ctx::execute() {
         assert((*ready_reg)->latency < MAX_ALU_LATENCY);
         m_result_bus[resbus]->set((*ready_reg)->latency);
         m_fu[n]->issue(issue_inst);
+
+        if (m_sid == g_cluster_sim && (*ready_reg)->pc != -1) {
+          printf("DEBUG: SM %d Warp %d - PC %x Execution Issued on resbus %d, occupy %d cycles\n", 
+                m_sid, (*ready_reg)->warp_id_func(), (*ready_reg)->pc, resbus, (*ready_reg)->latency);
+        }
       } else if (!schedule_wb_now) {
         m_fu[n]->issue(issue_inst);
+        if (m_sid == g_cluster_sim && (*ready_reg)->pc != -1) {
+          printf("DEBUG: SM %d Warp %d - PC %x Execution Issued but no resbus free for now\n", 
+                m_sid, (*ready_reg)->warp_id_func(), (*ready_reg)->pc);
+        }
       } else {
         // stall issue (cannot reserve result bus)
+        if (m_sid == g_cluster_sim && (*ready_reg)->pc != -1) {
+          printf("DEBUG: SM %d Warp %d - PC %x Execution Issue Stall due to resbus reservation failure\n", 
+                m_sid, (*ready_reg)->warp_id_func(), (*ready_reg)->pc);
+        }
+      }
+    }
+    else {
+      if (m_sid == g_cluster_sim && ready_reg != NULL) {
+        printf("DEBUG: SM %d Warp %d - PC %x Execution Cannot Issue. Register ready status: %d; Function unit status: %d\n", 
+                m_sid, (*ready_reg)->warp_id_func(), (*ready_reg)->pc, 
+                issue_inst.has_ready(partition_issue, reg_id), m_fu[n]->can_issue(**ready_reg));
       }
     }
   }
@@ -1999,6 +2024,18 @@ void shader_core_ctx::writeback() {
      * To handle this case, we ignore the return value (thus allowing
      * no stalling).
      */
+
+    if (m_sid == g_cluster_sim) {
+      printf("DEBUG: SM %d Warp %u - PC %x Writeback. Register Released: ",
+             m_sid, pipe_reg->warp_id(), pipe_reg->pc);
+
+      for (unsigned r = 0; r < MAX_OUTPUT_VALUES; r++) {
+        if (pipe_reg->out[r] > 0) {
+          printf("R%d ", pipe_reg->out[r]-1);
+        }
+      }
+      printf("\n");
+    }
 
     m_operand_collector.writeback(*pipe_reg);
     unsigned warp_id = pipe_reg->warp_id();
