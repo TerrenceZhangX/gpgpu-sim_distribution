@@ -2226,6 +2226,12 @@ void ldst_unit::L1_latency_queue_cycle() {
                     mf_next->get_inst().out[r]);
                 m_scoreboard->releaseRegister(mf_next->get_inst().warp_id(),
                                               mf_next->get_inst().out[r]);
+                if (m_sid == g_cluster_sim) {
+                  printf("DEBUG: SM %d Warp %u - PC %x Writeback. Register Released: R%d\n",
+                         m_sid, mf_next->get_inst().warp_id(),
+                         mf_next->get_inst().pc,
+                         mf_next->get_inst().out[r] - 1);
+                }
                 m_core->warp_inst_complete(mf_next->get_inst());
               }
             }
@@ -2801,6 +2807,16 @@ void ldst_unit::writeback() {
         }
       }
       if (insn_completed) {
+        if (m_sid == g_cluster_sim) {
+          printf("DEBUG: SM %d Warp %u - PC %x Writeback. Register Released: ",
+                 m_sid, m_next_wb.warp_id(), m_next_wb.pc);
+          for (unsigned r = 0; r < MAX_OUTPUT_VALUES; r++) {
+            if (m_next_wb.out[r] > 0) {
+              printf("R%d ", m_next_wb.out[r] - 1);
+            }
+          }
+          printf("\n");
+        }
         m_core->warp_inst_complete(m_next_wb);
         if (m_next_wb.m_is_ldgsts) {
           m_core->unset_depbar(m_next_wb);
@@ -3029,6 +3045,16 @@ void ldst_unit::cycle() {
           }
         }
         if (!pending_requests) {
+          if (m_sid == g_cluster_sim) {
+            printf("DEBUG: SM %d Warp %u - PC %x Writeback. Register Released: ",
+                   m_sid, m_dispatch_reg->warp_id(), m_dispatch_reg->pc);
+            for (unsigned r = 0; r < MAX_OUTPUT_VALUES; r++) {
+              if (m_dispatch_reg->out[r] > 0) {
+                printf("R%d ", m_dispatch_reg->out[r] - 1);
+              }
+            }
+            printf("\n");
+          }
           m_core->warp_inst_complete(*m_dispatch_reg);
           m_scoreboard->releaseRegisters(m_dispatch_reg);
 
@@ -3046,6 +3072,16 @@ void ldst_unit::cycle() {
       }
     } else {
       // stores exit pipeline here
+      if (m_sid == g_cluster_sim) {
+        printf("DEBUG: SM %d Warp %u - PC %x Writeback. Register Released: ",
+               m_sid, m_dispatch_reg->warp_id(), m_dispatch_reg->pc);
+        for (unsigned r = 0; r < MAX_OUTPUT_VALUES; r++) {
+          if (m_dispatch_reg->out[r] > 0) {
+            printf("R%d ", m_dispatch_reg->out[r] - 1);
+          }
+        }
+        printf("\n");
+      }
       m_core->dec_inst_in_pipeline(warp_id);
       m_core->warp_inst_complete(*m_dispatch_reg);
       m_dispatch_reg->clear();
